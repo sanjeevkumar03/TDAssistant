@@ -237,10 +237,17 @@ extension VAChatViewController {
 
     func openCameraPicker() {
         self.addQRScannerView(isQRCodeUploaded: false)
-        if self.qrScannerView.captureSession == nil {
+        /*if self.qrScannerView.captureSession == nil {
             self.qrScannerView.setupCaptureSession()
         } else {
             self.qrScannerView.startScanning()
+        }*/
+        if let scanner = self.qrScannerView {
+            if scanner.captureSession == nil {
+                scanner.setupCaptureSession()
+            } else {
+                scanner.startScanning()
+            }
         }
     }
 }
