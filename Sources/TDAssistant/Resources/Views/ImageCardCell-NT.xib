@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="160" id="KGk-i7-Jjw" customClass="ImageCardCell" customModule="TDAssistant">
+            <rect key="frame" x="0.0" y="0.0" width="201" height="160"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="201" height="160"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9pF-4Q-QKS">
+                        <rect key="frame" x="28" y="4" width="150" height="150"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4F5-iq-3Bz">
+                                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="6lX-zi-FAx"/>
+                                    <constraint firstAttribute="width" constant="150" id="fml-Xh-DZT"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="4F5-iq-3Bz" secondAttribute="bottom" id="7N1-yW-IOc"/>
+                            <constraint firstItem="4F5-iq-3Bz" firstAttribute="leading" secondItem="9pF-4Q-QKS" secondAttribute="leading" id="AH0-hC-RaA"/>
+                            <constraint firstItem="4F5-iq-3Bz" firstAttribute="top" secondItem="9pF-4Q-QKS" secondAttribute="top" id="EOJ-oC-laC"/>
+                            <constraint firstAttribute="trailing" secondItem="4F5-iq-3Bz" secondAttribute="trailing" id="hXs-ze-WaB"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                <integer key="value" value="0"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" red="0.89019607840000003" green="0.90196078430000004" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="4"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="4F5-iq-3Bz" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="7s6-Ql-dqL"/>
+                    <constraint firstAttribute="bottom" secondItem="4F5-iq-3Bz" secondAttribute="bottom" constant="4" id="oBo-39-13d"/>
+                    <constraint firstItem="4F5-iq-3Bz" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="28" id="rxF-a3-iwn"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="msgImgView" destination="4F5-iq-3Bz" id="b0M-sY-psU"/>
+                <outlet property="msgImgViewHeight" destination="6lX-zi-FAx" id="Osc-S9-YuH"/>
+                <outlet property="msgImgViewWidth" destination="fml-Xh-DZT" id="gBk-3B-xgh"/>
+            </connections>
+            <point key="canvasLocation" x="31.159420289855074" y="54.910714285714285"/>
+        </tableViewCell>
+    </objects>
+</document>

@@ -1,0 +1,47 @@
+/* 
+  Localizable.strings
+  XavBotFramework
+
+  Created by K, Ravi Kumar on 23/07/21.
+  Copyright © 2021 Telus International. All rights reserved.
+*/
+
+"Save" = "Save";
+"Cancel" = "Cancel";
+"Select Language" = "Select Language";
+"Select Channel" = "Select Channel";
+"Widget Settings" = "Widget Settings";
+"Setting" = "Setting";
+"More Options" = "More Options";
+"Submit" = "Submit";
+"Skip Feedback" = "Skip Feedback";
+"Did we resolve your issue?" = "Did we resolve your issue?";
+"Send Chat Transcript to your email address" = "Send Chat Transcript to your email address";
+"Chat Transcript" = "Chat Transcript";
+"Thanks for your feedback!" = "Thanks for your feedback!";
+"Feedback Comment" = "Feedback Comment";
+"Additional Feedback" = "Additional Feedback";
+"Skip Feedback" = "Skip Feedback";
+"Add Additional Feedback" = "Add Additional Feedback";
+"Regarding the TELUS Virtual Assistant that just helped you, how would you rate its performance?" = "Regarding the TELUS Virtual Assistant that just helped you, how would you rate its performance?";
+"Want to share feedback?" = "Want to share feedback?";
+"Sorry! Your device does not support speech input" = "Sorry! Your device does not support speech input";
+"Say something" = "Say something";
+"Type your message" = "Type your message";
+"Something went wrong while connecting, make sure the credentials are right and try again" = "Something went wrong while connecting, make sure the credentials are right and try again";
+"Logout" = "Logout";
+"This field is required" = "This field is required";
+"This password is incorrect" = "This password is incorrect";
+"This Jid  is invalid" = "This Jid  is invalid";
+"Sign in" = "Sign in";
+"Password" = "Password";
+"Chatbot" = "Chatbot";
+"Mobile" = "Mobile";
+"Privacy Policy" = "Privacy Policy";
+"Agent" = "Agent";
+"Read more" = "Read more";
+"Read less" = "Read less";
+"Close" = "Close";
+"Email" = "Email";
+
+
