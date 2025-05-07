@@ -1149,7 +1149,7 @@ class VAChatViewController: UIViewController {
         self.setLocalization()
         DispatchQueue.main.asyncAfter(deadline: .now()+2.0) {
 //            self.configureSignatureView()
-//            self.configureQRScannerView()
+            self.configureQRScannerView()
             self.configureMapView()
         }
     }
