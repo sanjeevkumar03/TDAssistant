@@ -1,8 +1,9 @@
+//
 //  QRScannerView.swift
-// Copyright © 2024 Telus Digital. All rights reserved.
+//  Copyright © 2024 Telus Digital. All rights reserved.
+//
 
 import UIKit
-
 import Foundation
 import AVFoundation
 
@@ -17,27 +18,25 @@ class QRScannerView: UIView {
 
     weak var delegate: QRScannerViewDelegate?
 
-    /// capture settion which allows us to start and stop scanning.
+    /// Capture session to manage scanning.
     var captureSession: AVCaptureSession?
 
-    // Init methods..
+    /// Preview layer to show camera input.
+    private var previewLayer: AVCaptureVideoPreviewLayer?
+
+    // MARK: - Initializers
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        // doInitialSetup()
-    }
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        // doInitialSetup()
     }
 
-    // MARK: overriding the layerClass to return `AVCaptureVideoPreviewLayer`.
-    override class var layerClass: AnyClass {
-        return AVCaptureVideoPreviewLayer.self
-    }
-    override var layer: AVCaptureVideoPreviewLayer {
-        return super.layer as! AVCaptureVideoPreviewLayer
+    override init(frame: CGRect) {
+        super.init(frame: frame)
     }
 }
+
+// MARK: - Public Scanning Methods
+
 extension QRScannerView {
 
     var isRunning: Bool {
@@ -61,18 +60,22 @@ extension QRScannerView {
         clipsToBounds = true
         captureSession = AVCaptureSession()
 
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
-        let videoInput: AVCaptureDeviceInput
-        do {
-            videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
-        } catch let error {
-            print(error)
+        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+            scanningDidFail()
             return
         }
 
-        if captureSession?.canAddInput(videoInput) ?? false {
-            captureSession?.addInput(videoInput)
-        } else {
+        do {
+            let videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+
+            if captureSession?.canAddInput(videoInput) ?? false {
+                captureSession?.addInput(videoInput)
+            } else {
+                scanningDidFail()
+                return
+            }
+        } catch {
+            print("Error initializing camera input: \(error)")
             scanningDidFail()
             return
         }
@@ -83,19 +86,29 @@ extension QRScannerView {
             captureSession?.addOutput(metadataOutput)
 
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            metadataOutput.metadataObjectTypes = [.qr/*, .ean8, .ean13, .pdf417*/]
+            metadataOutput.metadataObjectTypes = [.qr]
         } else {
             scanningDidFail()
             return
         }
 
-        self.layer.session = captureSession
-        self.layer.videoGravity = .resizeAspectFill
+        setupPreviewLayer()
 
         DispatchQueue.global().async {
             self.captureSession?.startRunning()
         }
     }
+
+    private func setupPreviewLayer() {
+        guard let session = captureSession else { return }
+
+        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
+        previewLayer.frame = self.bounds
+        previewLayer.videoGravity = .resizeAspectFill
+        self.layer.addSublayer(previewLayer)
+        self.previewLayer = previewLayer
+    }
+
     func scanningDidFail() {
         delegate?.qrScanningDidFail()
         captureSession = nil
@@ -106,14 +119,17 @@ extension QRScannerView {
     }
 }
 
+// MARK: - AVCaptureMetadataOutputObjectsDelegate
+
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ output: AVCaptureMetadataOutput,
                         didOutput metadataObjects: [AVMetadataObject],
                         from connection: AVCaptureConnection) {
         stopScanning()
-        if let metadataObject = metadataObjects.first {
-            guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
-            guard let stringValue = readableObject.stringValue else { return }
+
+        if let metadataObject = metadataObjects.first,
+           let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
+           let stringValue = readableObject.stringValue {
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             found(code: stringValue)
         }
