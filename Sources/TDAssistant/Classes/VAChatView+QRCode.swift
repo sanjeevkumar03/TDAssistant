@@ -8,7 +8,7 @@ import Photos
 extension VAChatViewController {
 
     func configureQRScannerView() {
-        self.qrScannerView.delegate = self
+//        self.qrScannerView.delegate = self
         self.qrScannerView.backgroundColor = .white
         self.qrScannerContainerView.backgroundColor = .black.withAlphaComponent(0.35)
 
