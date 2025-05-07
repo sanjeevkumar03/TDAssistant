@@ -1148,9 +1148,9 @@ class VAChatViewController: UIViewController {
         /// localization
         self.setLocalization()
         DispatchQueue.main.asyncAfter(deadline: .now()+2.0) {
-//            self.configureSignatureView()
-//            self.configureQRScannerView()
-//            self.configureMapView()
+            self.configureSignatureView()
+            self.configureQRScannerView()
+            self.configureMapView()
         }
     }
     // MARK: - Authenticate user beforw enabling chatbot
