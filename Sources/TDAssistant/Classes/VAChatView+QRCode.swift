@@ -236,6 +236,7 @@ extension VAChatViewController {
     }
 
     func openCameraPicker() {
+        print("captureSession is \(String(describing: self.qrScannerView?.captureSession))")
         self.addQRScannerView(isQRCodeUploaded: false)
         /*if self.qrScannerView.captureSession == nil {
             self.qrScannerView.setupCaptureSession()
