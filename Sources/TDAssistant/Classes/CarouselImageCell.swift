@@ -21,7 +21,7 @@ class CarouselImageCell: UICollectionViewCell {
             imageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
             imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholderImage", in: Bundle.module, with: nil))
         } else {
-            imageView.image = UIImage(named: "placeholderImage", in: Bundle.module), with: nil)
+            imageView.image = UIImage(named: "placeholderImage", in: Bundle.module, with: nil)
         }
     }
 }
