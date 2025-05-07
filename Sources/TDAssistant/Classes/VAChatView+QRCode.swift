@@ -8,7 +8,6 @@ import Photos
 extension VAChatViewController {
 
     func configureQRScannerView() {
-//        self.qrScannerView.delegate = self
         self.qrScannerView.backgroundColor = .white
         self.qrScannerContainerView.backgroundColor = .black.withAlphaComponent(0.35)
 
@@ -85,6 +84,10 @@ extension VAChatViewController {
         self.hideScannedQRCodeDescView()
         self.qrScannerContainerView.frame = self.view.bounds
         self.view.addSubview(self.qrScannerContainerView)
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.01) {
+            self.qrScannerView.delegate = self
+        }
+
         if isQRCodeUploaded {
             self.rescanQRCodeButtonContainer.isHidden = true
             self.uploadedFromGalleryButtonContainer.isHidden = false
