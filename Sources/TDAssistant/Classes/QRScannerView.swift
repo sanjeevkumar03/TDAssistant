@@ -6,6 +6,13 @@
 import UIKit
 import AVFoundation
 
+/// Delegate callback for the QRScannerView.
+protocol QRScannerViewDelegate: AnyObject {
+    func qrScanningDidFail()
+    func qrScanningSucceededWithCode(_ str: String?)
+    func qrScanningDidStop()
+}
+
 class QRScannerView: UIView {
 
     weak var delegate: QRScannerViewDelegate?
