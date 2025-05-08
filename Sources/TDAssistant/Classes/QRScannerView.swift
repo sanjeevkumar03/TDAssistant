@@ -4,27 +4,15 @@
 //
 
 import UIKit
-import Foundation
 import AVFoundation
-
-/// Delegate callback for the QRScannerView.
-protocol QRScannerViewDelegate: AnyObject {
-    func qrScanningDidFail()
-    func qrScanningSucceededWithCode(_ str: String?)
-    func qrScanningDidStop()
-}
 
 class QRScannerView: UIView {
 
     weak var delegate: QRScannerViewDelegate?
 
-    /// Capture session to manage scanning.
     var captureSession: AVCaptureSession?
 
-    /// Preview layer to show camera input.
     private var previewLayer: AVCaptureVideoPreviewLayer?
-
-    // MARK: - Initializers
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -33,24 +21,24 @@ class QRScannerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-}
 
-// MARK: - Public Scanning Methods
-
-extension QRScannerView {
+    deinit {
+        stopScanning()
+        previewLayer?.removeFromSuperlayer()
+    }
 
     var isRunning: Bool {
         return captureSession?.isRunning ?? false
     }
 
     func startScanning() {
-        DispatchQueue.global().async {
+        DispatchQueue.main.async { // Ensure thread safety
             self.captureSession?.startRunning()
         }
     }
 
     func stopScanning() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { // Ensure thread safety
             self.captureSession?.stopRunning()
         }
         delegate?.qrScanningDidStop()
@@ -94,7 +82,7 @@ extension QRScannerView {
 
         setupPreviewLayer()
 
-        DispatchQueue.global().async {
+        DispatchQueue.main.async { // Ensure thread safety
             self.captureSession?.startRunning()
         }
     }
@@ -118,8 +106,6 @@ extension QRScannerView {
         delegate?.qrScanningSucceededWithCode(code)
     }
 }
-
-// MARK: - AVCaptureMetadataOutputObjectsDelegate
 
 extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ output: AVCaptureMetadataOutput,
