@@ -19,7 +19,7 @@ extension VAChatViewController {
 
         signatureView.strokeWidth = 3.0
         signatureView.strokeColor = isNewGenAITheme ? VAColorUtility.greyCharcoal_NT : VAColorUtility.senderBubbleColor
-        signatureView.backgroundColor = VAColorUtility.white
+//        signatureView.backgroundColor = VAColorUtility.white
         signatureView.delegate = self
         
         self.signatureCloseImageView.tintColor = isNewGenAITheme ? VAColorUtility.greyCharcoal_NT : VAColorUtility.senderBubbleColor
