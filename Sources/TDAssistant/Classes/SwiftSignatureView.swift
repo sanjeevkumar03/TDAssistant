@@ -11,9 +11,11 @@ public final class SwiftSignatureView: UIView {
 
     public var strokeWidth: CGFloat = 2.0 {
         didSet {
-            path?.lineWidth = strokeWidth
+            guard let path = path else { return }
+            path.lineWidth = strokeWidth
         }
     }
+
 
     public var strokeColor: UIColor = .black {
         didSet {
