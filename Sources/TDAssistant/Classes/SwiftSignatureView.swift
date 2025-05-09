@@ -2,7 +2,6 @@
 // Copyright © 2024 Telus Digital. All rights reserved.
 /// Note:- Took reference from DM_YPDrawSignatureView library to build this functionality
 
-import Foundation
 import UIKit
 
 public final class SwiftSignatureView: UIView {
@@ -11,18 +10,8 @@ public final class SwiftSignatureView: UIView {
 
     // MARK: - Public Properties
 
-    public var strokeWidth: CGFloat = 2.0 {
-        didSet {
-            path.lineWidth = strokeWidth
-        }
-    }
-
-    public var strokeColor: UIColor = .black {
-        didSet {
-            strokeColor.setStroke()
-        }
-    }
-
+    public var strokeWidth: CGFloat = 2.0
+    public var strokeColor: UIColor = .black
     public var signatureBackgroundColor: UIColor = .white {
         didSet {
             backgroundColor = signatureBackgroundColor
@@ -35,7 +24,7 @@ public final class SwiftSignatureView: UIView {
 
     // MARK: - Private Properties
 
-    private var path: UIBezierPath = UIBezierPath()
+    private var path = UIBezierPath()
     private var points = [CGPoint](repeating: .zero, count: 5)
     private var controlPoint = 0
 
@@ -115,6 +104,7 @@ public final class SwiftSignatureView: UIView {
 
     public func clear() {
         path.removeAllPoints()
+        path.lineWidth = strokeWidth // <-- Apply strokeWidth here instead of didSet
         setNeedsDisplay()
     }
 
@@ -168,6 +158,7 @@ public final class SwiftSignatureView: UIView {
         )
     }
 }
+
 
 
 
