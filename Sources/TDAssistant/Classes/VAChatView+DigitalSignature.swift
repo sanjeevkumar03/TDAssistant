@@ -98,7 +98,7 @@ extension VAChatViewController {
             self.signatureView.clear()
         }*/
         self.sendSignatureButton.isUserInteractionEnabled = false
-        if let signatureImage = self.signatureView.getCroppedSignature(scale: 2) {
+        if let signatureImage = self.signatureView.getCroppedSignature(scaleFactor: 2) {
             let imageBase64String = convertImageToBase64String(img: signatureImage)
             // UIImageWriteToSavedPhotosAlbum(signatureImage, nil, nil, nil)
             DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
