@@ -9,44 +9,51 @@ public final class SwiftSignatureView: UIView {
 
     public weak var delegate: SwiftSignatureDelegate?
 
-    public var strokeWidth: CGFloat = 2.0 {
-        didSet {
-            guard let path = path else { return }
-            path.lineWidth = strokeWidth
+        public var strokeWidth: CGFloat = 2.0 {
+            didSet {
+                path.lineWidth = strokeWidth
+            }
         }
-    }
 
-
-    public var strokeColor: UIColor = .black {
-        didSet {
-            strokeColor.setStroke()
+        public var strokeColor: UIColor = .black {
+            didSet {
+                strokeColor.setStroke()
+            }
         }
-    }
 
-    public var signatureBackgroundColor: UIColor = .white {
-        didSet {
+        public var signatureBackgroundColor: UIColor = .white {
+            didSet {
+                backgroundColor = signatureBackgroundColor
+            }
+        }
+
+        public var doesContainSignature: Bool {
+            return !path.isEmpty
+        }
+
+        // MARK: - Private Properties
+        private var path = UIBezierPath()
+        private var points = [CGPoint](repeating: .zero, count: 5)
+        private var controlPoint = 0
+
+        // MARK: - Initializers
+        public override init(frame: CGRect) {
+            super.init(frame: frame)
+            configure()
+        }
+
+        public required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            configure()
+        }
+
+        private func configure() {
             backgroundColor = signatureBackgroundColor
+            path.lineWidth = strokeWidth
+            path.lineJoinStyle = .round
+            path.lineCapStyle = .round
         }
-    }
 
-    public var doesContainSignature: Bool {
-        guard let path = path else { return false }
-        return !path.isEmpty
-    }
-
-    private var path: UIBezierPath? = UIBezierPath()
-    private var points = [CGPoint](repeating: .zero, count: 5)
-    private var controlPoint = 0
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        configurePath()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configurePath()
-    }
 
     private func configurePath() {
         path?.lineWidth = strokeWidth
