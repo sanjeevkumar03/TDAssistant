@@ -108,16 +108,17 @@ public final class SwiftSignatureView: UIView {
         UIGraphicsEndImageContext()
         return image
     }
-
-    public func getCroppedSignature(scale: CGFloat = 1) -> UIImage? {
-        guard let fullImage = getSignature(scale: scale),
+    
+    public func getCroppedSignature(scaleFactor: CGFloat = 1) -> UIImage? {
+        guard let fullImage = getSignature(scale: scaleFactor),
               let bounds = path?.bounds.insetBy(dx: -strokeWidth / 2, dy: -strokeWidth / 2)
         else { return nil }
 
-        let scaledBounds = scale(bounds, byFactor: scale)
+        let scaledBounds = scale(bounds, byFactor: scaleFactor)
         guard let cropped = fullImage.cgImage?.cropping(to: scaledBounds) else { return nil }
         return UIImage(cgImage: cropped)
     }
+
 
     private func scale(_ rect: CGRect, byFactor factor: CGFloat) -> CGRect {
         return CGRect(
