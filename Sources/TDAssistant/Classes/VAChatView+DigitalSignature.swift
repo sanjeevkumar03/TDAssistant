@@ -19,7 +19,7 @@ extension VAChatViewController {
 
         signatureView.strokeWidth = 3.0
         signatureView.strokeColor = isNewGenAITheme ? VAColorUtility.greyCharcoal_NT : VAColorUtility.senderBubbleColor
-//        signatureView.backgroundColor = VAColorUtility.white
+        signatureView.backgroundColor = VAColorUtility.white
         signatureView.delegate = self
         
         self.signatureCloseImageView.tintColor = isNewGenAITheme ? VAColorUtility.greyCharcoal_NT : VAColorUtility.senderBubbleColor
@@ -63,6 +63,9 @@ extension VAChatViewController {
             self.sendSignatureButton.backgroundColor = isNewGenAITheme ? VAColorUtility.borderColor_NT : UIColor.lightGray.withAlphaComponent(0.5)
             self.sendSignatureButton.isUserInteractionEnabled = false
         }
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+            self.addSignatureView()
+        }
     }
     func addSignatureView() {
         self.sendSignatureButton.isUserInteractionEnabled = true
@@ -98,7 +101,7 @@ extension VAChatViewController {
             self.signatureView.clear()
         }*/
         self.sendSignatureButton.isUserInteractionEnabled = false
-        if let signatureImage = self.signatureView.getCroppedSignature(scaleFactor: 2) {
+        if let signatureImage = self.signatureView.getCroppedSignature(scale: 2) {
             let imageBase64String = convertImageToBase64String(img: signatureImage)
             // UIImageWriteToSavedPhotosAlbum(signatureImage, nil, nil, nil)
             DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {

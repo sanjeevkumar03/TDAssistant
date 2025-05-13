@@ -8,7 +8,7 @@ import Photos
 extension VAChatViewController {
 
     func configureQRScannerView() {
-        //self.qrScannerView.delegate = self
+        self.qrScannerView.delegate = self
         self.qrScannerView.backgroundColor = .white
         self.qrScannerContainerView.backgroundColor = .black.withAlphaComponent(0.35)
 
@@ -85,7 +85,6 @@ extension VAChatViewController {
         self.hideScannedQRCodeDescView()
         self.qrScannerContainerView.frame = self.view.bounds
         self.view.addSubview(self.qrScannerContainerView)
-
         if isQRCodeUploaded {
             self.rescanQRCodeButtonContainer.isHidden = true
             self.uploadedFromGalleryButtonContainer.isHidden = false
@@ -236,20 +235,11 @@ extension VAChatViewController {
     }
 
     func openCameraPicker() {
-        print("qrScannerView is \(String(describing: self.qrScannerView))")
-        print("captureSession is \(String(describing: self.qrScannerView?.captureSession))")
         self.addQRScannerView(isQRCodeUploaded: false)
-        /*if self.qrScannerView.captureSession == nil {
+        if self.qrScannerView.captureSession == nil {
             self.qrScannerView.setupCaptureSession()
         } else {
             self.qrScannerView.startScanning()
-        }*/
-        if let scanner = self.qrScannerView {
-            if scanner.captureSession == nil {
-                scanner.setupCaptureSession()
-            } else {
-                scanner.startScanning()
-            }
         }
     }
 }

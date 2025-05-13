@@ -2,138 +2,161 @@
 // Copyright © 2024 Telus Digital. All rights reserved.
 /// Note:- Took reference from DM_YPDrawSignatureView library to build this functionality
 
+import Foundation
 import UIKit
 
-public final class SwiftSignatureView: UIView {
+@IBDesignable
+final public class SwiftSignatureView: UIView {
 
     public weak var delegate: SwiftSignatureDelegate?
 
-    // MARK: - Public Properties
+    // MARK: - Public properties
+    @IBInspectable public var strokeWidth: CGFloat = 2.0 {
+        didSet {
+            path.lineWidth = strokeWidth
+        }
+    }
 
-    public var strokeWidth: CGFloat = 2.0
-    public var strokeColor: UIColor = .black
-    public var signatureBackgroundColor: UIColor = .white {
+    @IBInspectable public var strokeColor: UIColor = .black {
+        didSet {
+            strokeColor.setStroke()
+        }
+    }
+    @IBInspectable public var signatureBackgroundColor: UIColor = .white {
         didSet {
             backgroundColor = signatureBackgroundColor
         }
     }
 
+    /// Computed Property returns true if the view actually contains a signature
     public var doesContainSignature: Bool {
-        return !path.isEmpty
+        get {
+            if path.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }
     }
 
-    // MARK: - Private Properties
-
-    private var path = UIBezierPath()
-    private var points = [CGPoint](repeating: .zero, count: 5)
-    private var controlPoint = 0
+    // MARK: - Private properties
+    fileprivate var path = UIBezierPath()
+    fileprivate var points = [CGPoint](repeating: CGPoint(), count: 5)
+    fileprivate var controlPoint = 0
 
     // MARK: - Init
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        configure()
-    }
-
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        configure()
-    }
-
-    private func configure() {
-        backgroundColor = signatureBackgroundColor
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         path.lineWidth = strokeWidth
         path.lineJoinStyle = .round
         path.lineCapStyle = .round
     }
 
-    // MARK: - Drawing
-
-    public override func draw(_ rect: CGRect) {
-        strokeColor.setStroke()
-        path.stroke()
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        path.lineWidth = strokeWidth
+        path.lineJoinStyle = .round
+        path.lineCapStyle = .round
     }
 
-    // MARK: - Touch Handling
-
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        points[0] = touch.location(in: self)
-        controlPoint = 0
-        delegate?.didStart()
+    // MARK: - Draw
+    override public func draw(_ rect: CGRect) {
+        self.strokeColor.setStroke()
+        self.path.stroke()
     }
 
-    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
+    // MARK: - Touch handling functions
+    override public func touchesBegan(_ touches: Set <UITouch>, with event: UIEvent?) {
+        if let firstTouch = touches.first {
+            let touchPoint = firstTouch.location(in: self)
+            controlPoint = 0
+            points[0] = touchPoint
+        }
 
-        let point = touch.location(in: self)
-        controlPoint += 1
-        points[controlPoint] = point
+        if let delegate = delegate {
+            delegate.didStart()
+        }
+    }
 
-        if controlPoint == 4 {
-            points[3] = CGPoint(
-                x: (points[2].x + points[4].x) / 2.0,
-                y: (points[2].y + points[4].y) / 2.0
-            )
+    override public func touchesMoved(_ touches: Set <UITouch>, with event: UIEvent?) {
+        if let firstTouch = touches.first {
+            let touchPoint = firstTouch.location(in: self)
+            controlPoint += 1
+            points[controlPoint] = touchPoint
+            if controlPoint == 4 {
+                points[3] = CGPoint(x: (points[2].x + points[4].x)/2.0, y: (points[2].y + points[4].y)/2.0)
+                path.move(to: points[0])
+                path.addCurve(to: points[3], controlPoint1: points[1], controlPoint2: points[2])
 
-            path.move(to: points[0])
-            path.addCurve(to: points[3], controlPoint1: points[1], controlPoint2: points[2])
-
+                setNeedsDisplay()
+                points[0] = points[3]
+                points[1] = points[4]
+                controlPoint = 1
+            }
             setNeedsDisplay()
-
-            points[0] = points[3]
-            points[1] = points[4]
-            controlPoint = 1
         }
-
-        setNeedsDisplay()
     }
 
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override public func touchesEnded(_ touches: Set <UITouch>, with event: UIEvent?) {
         if controlPoint < 4 {
-            let point = points[0]
-            path.move(to: point)
-            path.addLine(to: point)
+            let touchPoint = points[0]
+            path.move(to: CGPoint(x: touchPoint.x, y: touchPoint.y))
+            path.addLine(to: CGPoint(x: touchPoint.x, y: touchPoint.y))
+            setNeedsDisplay()
+        } else {
+            controlPoint = 0
         }
-        controlPoint = 0
-        setNeedsDisplay()
-        delegate?.didFinish()
+        if let delegate = delegate {
+            delegate.didFinish()
+        }
     }
 
-    // MARK: - Public Methods
+    // MARK: - Methods for interacting with Signature View
 
+    /// Clear signature View
     public func clear() {
-        path.removeAllPoints()
-        path.lineWidth = strokeWidth // <-- Apply strokeWidth here instead of didSet
-        setNeedsDisplay()
+        self.path.removeAllPoints()
+        self.setNeedsDisplay()
     }
 
+    /// Save  signature as an UIImage
     public func getSignature(scale: CGFloat = 1) -> UIImage? {
-        guard doesContainSignature else { return nil }
-
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, scale)
-        strokeColor.setStroke()
-        path.stroke()
-        let signatureImage = UIGraphicsGetImageFromCurrentImageContext()
+        if !doesContainSignature { return nil }
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, scale)
+        self.strokeColor.setStroke()
+        self.path.stroke()
+        let signature = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return signatureImage
+        return signature
     }
 
-    public func getCroppedSignature(scaleFactor: CGFloat = 1) -> UIImage? {
-        guard let fullImage = getSignature(scale: scaleFactor) else { return nil }
-
-        let bounds = scaleRect(path.bounds.insetBy(dx: -strokeWidth / 2, dy: -strokeWidth / 2), by: scaleFactor)
-        guard let croppedCGImage = fullImage.cgImage?.cropping(to: bounds) else { return nil }
-
-        return UIImage(cgImage: croppedCGImage)
+    /// Save signature (cropped of outside white space) as a UIImage
+    public func getCroppedSignature(scale: CGFloat = 1) -> UIImage? {
+        guard let fullRender = getSignature(scale: scale) else { return nil }
+        let bounds = self.scale(path.bounds.insetBy(dx: -strokeWidth/2, dy: -strokeWidth/2), byFactor: scale)
+        guard let imageRef = fullRender.cgImage?.cropping(to: bounds) else { return nil }
+        return UIImage(cgImage: imageRef)
     }
 
+    fileprivate func scale(_ rect: CGRect, byFactor factor: CGFloat) -> CGRect {
+        var scaledRect = rect
+        scaledRect.origin.x *= factor
+        scaledRect.origin.y *= factor
+        scaledRect.size.width *= factor
+        scaledRect.size.height *= factor
+        return scaledRect
+    }
+
+    /// Save signature as a Vector PDF Data blob
     public func getPDFSignature() -> Data {
-        let mutableData = CFDataCreateMutable(nil, 0)!
-        guard let dataConsumer = CGDataConsumer(data: mutableData) else { fatalError("Unable to create PDF data consumer") }
 
-        var mediaBox = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
-        guard let pdfContext = CGContext(consumer: dataConsumer, mediaBox: &mediaBox, nil) else { fatalError("Unable to create PDF context") }
+        let mutableData = CFDataCreateMutable(nil, 0)
+
+        guard let dataConsumer = CGDataConsumer.init(data: mutableData!) else { fatalError() }
+
+        var rect = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+
+        guard let pdfContext = CGContext(consumer: dataConsumer, mediaBox: &rect, nil) else { fatalError() }
 
         pdfContext.beginPDFPage(nil)
         pdfContext.translateBy(x: 0, y: frame.height)
@@ -141,43 +164,30 @@ public final class SwiftSignatureView: UIView {
         pdfContext.addPath(path.cgPath)
         pdfContext.setStrokeColor(strokeColor.cgColor)
         pdfContext.strokePath()
+        pdfContext.saveGState()
         pdfContext.endPDFPage()
         pdfContext.closePDF()
 
-        return mutableData as Data
+        let data = mutableData! as Data
+
+        return data
     }
 
-    // MARK: - Helpers
-
-    private func scaleRect(_ rect: CGRect, by factor: CGFloat) -> CGRect {
-        return CGRect(
-            x: rect.origin.x * factor,
-            y: rect.origin.y * factor,
-            width: rect.size.width * factor,
-            height: rect.size.height * factor
-        )
-    }
 }
 
-
-
-
 // MARK: - Protocol definition
-
 @objc
 public protocol SwiftSignatureDelegate: AnyObject {
     func didStart()
-    func didFinish()
-
     @available(*, unavailable, renamed: "didStart()")
     func startedDrawing()
 
+    func didFinish()
     @available(*, unavailable, renamed: "didFinish()")
     func finishedDrawing()
 }
 
-public extension SwiftSignatureDelegate {
+extension SwiftSignatureDelegate {
     func didStart() {}
     func didFinish() {}
 }
-
