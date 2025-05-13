@@ -382,8 +382,8 @@ extension VAChatViewController {
         if self.viewModel.arrayOfMessages2D.last?.last?.allowSign ?? false {
             self.view.endEditing(true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: {
-//                self.addSignatureView()
-                self.configureSignatureView()
+                self.addSignatureView()
+//                self.configureSignatureView()
             })
         } else if self.viewModel.arrayOfMessages2D.last?.last?.qrCode ?? false {
             self.view.endEditing(true)

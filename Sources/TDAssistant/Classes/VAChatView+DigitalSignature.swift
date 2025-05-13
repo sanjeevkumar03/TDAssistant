@@ -63,14 +63,15 @@ extension VAChatViewController {
             self.sendSignatureButton.backgroundColor = isNewGenAITheme ? VAColorUtility.borderColor_NT : UIColor.lightGray.withAlphaComponent(0.5)
             self.sendSignatureButton.isUserInteractionEnabled = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
-            self.addSignatureView()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+//            self.addSignatureView()
+//        }
     }
     func addSignatureView() {
         self.sendSignatureButton.isUserInteractionEnabled = true
         self.signatureContainerView.frame = self.view.bounds
         self.view.addSubview(self.signatureContainerView)
+        self.configureSignatureView()
         UIView.transition(with: view, duration: 0.25, options: .transitionCrossDissolve, animations: {
             self.view.bringSubviewToFront(self.signatureContainerView)
         })
